@@ -14,7 +14,7 @@ class User extends CI_Controller {
 	public function index()
 	{
 		$data['isi'] = $this->db->get('user');//membuka tabel user dan mengambil data tiap field dan ditampung di variabel isi
-		$this->load->view('/formviews' , $data);//membuka form index dan memasukkan variabel data
+		$this->load->view('showUser' , $data);//membuka form index dan memasukkan variabel data
 	}
 
 	// Add a new item
@@ -33,26 +33,49 @@ class User extends CI_Controller {
 
 		$sukses = $this->db->insert('user' , $data);
 		if($sukses){
-			echo "dadi";
+			header("Location: index");
 		}else{
 			echo "gagal";
 		}
 	}
 	//Update one item
-	public function update(  )
+	public function update( $id= '' )
 	{
 		$this->db->where('id',$id);
 		$data['isi'] = $this->db->get('user');
 
-		$this->load->view('form/update',$data);
+		$this->load->view('update',$data);
 	}
 
-	//Delete one item
-	public function delete()
-	{
-		$this->db->get('id',$id);
+	//update Action
+	public function updateAction ($id = ''){
+		$data = array('username' => $this->input->post('username'),
+					'password'=>$this->input->post('password'),
+					'fullname'=>$this->input->post('fullname'),
+					'level'=>$this->input->post('level'));
+		$this->db->get('user');
+		$this->db->where('id',$id);
+		$sukses = $this->db->update('user',$data);
 
-		$this->db->delete('user');
+		if($sukses){
+			echo "Proses Update Berhasil";
+		}else{
+			echo "Gagal Update !!";
+		}
+	} 
+
+	//Delete one item
+	public function delete($id='')
+	{
+		$this->db->where('id',$id);
+
+		$delete=$this->db->delete('user');
+
+		if($delete){
+			header("Location:..");
+		}else{
+			echo "Delete Gagal";
+		}
 
 	}
 
